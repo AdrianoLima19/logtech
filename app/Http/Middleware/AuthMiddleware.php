@@ -7,15 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class AuthenticateAdmin
+class AuthMiddleware
 {
     /**
+     * Handle an incoming request.
+     *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check() || !Auth::user()->is_admin) {
-            return response()->json(['error' => 'Forbidden: Admins only'], 403);
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
         }
 
         return $next($request);

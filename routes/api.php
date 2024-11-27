@@ -1,27 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\User\UserController;
 
-Route::controller(UserController::class)->prefix('user')->group(function () {
-    Route::middleware('auth.guest')->group(function () {
-        Route::post('register', 'register');
-        Route::post('login', 'login');
-    });
-
-    Route::middleware('auth.user')->group(function () {
-        Route::get('profile', 'show');
-        Route::put('profile', 'update');
-        Route::delete('profile', 'delete');
-        Route::post('logout', 'logout');
-    });
+Route::controller(AuthController::class)->group(function () {
+    Route::post('auth/register', 'register')->middleware('guest');
+    Route::post('auth/login', 'login')->middleware('guest');
+    Route::post('auth/logout', 'logout')->middleware('user');
 });
 
-Route::controller(UserController::class)->prefix('users')->group(function () {
-    Route::middleware('auth.admin')->group(function () {
-        Route::get('/', 'index');
-        Route::get('/{id}', 'search')->whereNumber('id');
-        Route::put('/{id}', 'change')->whereNumber('id');
-        Route::delete('/{id}', 'remove')->whereNumber('id');
-    });
+Route::controller(UserController::class)->middleware('user')->group(function () {
+    Route::get('user/profile', 'show');
+    Route::put('user/profile', 'update');
+    Route::delete('user/profile', 'destroy');
 });
