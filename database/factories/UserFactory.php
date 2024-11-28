@@ -26,7 +26,7 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function randmin(): static
+    public function randAdmin(): static
     {
         return $this->state(fn(array $attributes) => [
             'is_admin' => (rand(1, 10) > 5 ? true : false),
